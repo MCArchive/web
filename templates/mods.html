@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<h1>Archived Mods</h1>
+<p>This is a list of mods available from the archive.</p>
+
+{% for id, mod in mods.items() %}
+<p><a href="{{ url_for('mod_page', id=id) }}">{{ mod.name }}</a></p>
+{% endfor %}
+
+{% endblock %}
