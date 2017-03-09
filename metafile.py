@@ -23,6 +23,16 @@ class ModVersion(JsonObject):
     hash_ = ObjectProperty(ModHash, name='hash', required=True)
     urls = ListProperty(ModUrl, required=True)
 
+    def visible_urls(self):
+        """
+        Returns a list of URLs for this version visible to the public. This
+        hides our archived URL if an official one is present.
+        """
+        if any(map(lambda u: u.type_ == "page" or u.type_ == "original", self.urls)):
+            return list(filter(lambda u: u.type_ != "archived", self.urls))
+        else:
+            return self.urls
+
 class ModMeta(JsonObject):
     """
     Holds metadata about a specific mod.

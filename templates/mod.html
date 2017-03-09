@@ -8,23 +8,26 @@
 <h2>Archived Versions</h2>
 
 {% for vsn in mod.versions %}
-<h3>{{ vsn.name }}</h2>
+<div class="version">
+    <h3>{{ vsn.name }}</h3>
 
-{% if vsn.desc != "" %}
-<p>{{ vsn.desc }}</p>
-{% endif %}
-<p>Checksum ({{ vsn.hash.type_ }}): {{ vsn.hash.digest }}</p>
+    {% if vsn.desc != "" %}
+    <p>{{ vsn.desc }}</p>
+    {% endif %}
+    <p>Supports Minecraft {{ ", ".join(vsn.mcvsn) }}</p>
+    <p>Checksum ({{ vsn.hash.type_ }}): {{ vsn.hash.digest }}</p>
 
-<ul>
-    {% for url in vsn.urls %}
-    <li><a href="{{ url.url }}">
-        {{ url_type_name(url.type_) }}
-        {% if url.desc != '' %}
-        ({{ url.desc }})
-        {% endif %}
-    </a></li>
-    {% endfor %}
-</ul>
+    <ul class="urls">
+        {% for url in vsn.visible_urls() %}
+        <li><a href="{{ url.url }}">
+            {{ url_type_name(url.type_) }}
+            {% if url.desc != '' %}
+            ({{ url.desc }})
+            {% endif %}
+        </a></li>
+        {% endfor %}
+    </ul>
+</div>
 {% endfor %}
 
 {% endblock %}

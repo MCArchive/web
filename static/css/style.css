@@ -1,0 +1,86 @@
+main, header, footer {
+    margin: auto auto;
+    padding: 0 0;
+    max-width: 800px;
+}
+
+/* Class for the box around archived versions */
+.version {
+    border-style: solid;
+    border-width: 1px;
+    padding: 12px 20px;
+    margin: 4px;
+    border-color: #CACACA;
+    background-color: #efefef;
+}
+
+/* Make p tags in versions more compact */
+.version p, .version h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.urls {
+    list-style-type: none;
+    padding: 0;
+}
+.urls li {
+    display: inline;
+    margin: 0px 4px;
+}
+.urls li a {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #5a5;
+    background-color: #6b6;
+    padding: 4px 12px;
+    color: white;
+    text-decoration: none;
+}
+.urls li a:hover {
+    background-color: #8d8;
+}
+
+body {
+    color: #666;
+    font-size: 15px;
+}
+
+h1 {
+    font-size: 24px;
+    color: #444;
+}
+
+h2 {
+    font-size: 20px;
+    color: #444;
+}
+
+h3 {
+    font-size: 18px;
+    color: #444;
+}
+
+p {
+    text-align: justify;
+}
+
+textarea {
+    height: 160px;
+}
+
+
+/* Desktop */
+@media only screen and (min-width:800px) {
+    textarea {
+        width: 800px;
+    }
+}
+
+/* Mobile */
+@media only screen and (max-width:799px) {
+    textarea {
+        width: 300px;
+    }
+}
+

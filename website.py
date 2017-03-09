@@ -19,7 +19,6 @@ def utility_funcs():
 
 @app.route('/')
 def home():
-
     return render_template('home.html')
 
 @app.route('/mods/')
