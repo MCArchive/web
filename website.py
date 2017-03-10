@@ -3,7 +3,7 @@ from metafile import load_mods
 from flask import Flask, render_template, abort
 app = Flask(__name__)
 
-app.mods = load_mods('repo')
+app.mods = load_mods('repo/mods')
 
 # This adds utility functions to the template engine.
 @app.context_processor
