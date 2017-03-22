@@ -4,6 +4,9 @@ import os.path
 import json
 from jsonobject import *
 
+# FIXME: Don't hard-code this
+s3url = "http://mcarch.s3-website-us-west-2.amazonaws.com/"
+
 class ModHash(JsonObject):
     type_ = StringProperty(name='type')
     digest = StringProperty()
@@ -18,18 +21,35 @@ class ModVersion(JsonObject):
     Holds metadata about a specific version of a mod.
     """
     name = StringProperty(required=True)
+    filename = StringProperty(required=True)
     desc = StringProperty(default="")
     mcvsn = ListProperty(str, required=True)
     hash_ = ObjectProperty(ModHash, name='hash', required=True)
-    urls = ListProperty(ModUrl, required=True)
+    urls = ListProperty(ModUrl)
+    archived = StringProperty(default='')
+
+    def archive_public(self):
+        """
+        Returns true if our archived version should be publicly available.
+        """
+        return not any(map(lambda u: u.type_ == "page", self.urls))
+
+    def archive_url(self):
+        """
+        Determines the URL of the archived file from the given S3 URL and the
+        version's checksum.
+        """
+        return s3url + self.archived
 
     def visible_urls(self):
         """
         Returns a list of URLs for this version visible to the public. This
         hides our archived URL if an official one is present.
         """
-        if any(map(lambda u: u.type_ == "page" or u.type_ == "original", self.urls)):
-            return list(filter(lambda u: u.type_ != "archived", self.urls))
+        if self.archived != '' and self.archive_public():
+            lst = self.urls.copy()
+            lst.append(ModUrl(type_="archived", url=self.archive_url()))
+            return lst
         else:
             return self.urls
 
