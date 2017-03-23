@@ -6,6 +6,7 @@
         rel="stylesheet"
         href="{{ url_for('static', filename='css/style.css') }}"
   />
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Source+Code+Pro" rel="stylesheet"/>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
@@ -14,7 +15,7 @@
         {% block body %}{% endblock %}
     </main>
     <footer>
-        <p>Archive Revision {{ meta_revision() }}</p>
-        <p>Copyright 2017 Minecraft Mod Archive</p>
+        <p>Archive Revision <span class="hash">{{ meta_revision() }}</span></p>
+        <p>Copyright &copy; 2017 Minecraft Mod Archive</p>
     </footer>
 </body>
