@@ -19,8 +19,8 @@ class MetaRepo(object):
         Returns true if the repo has updates available. This does a git fetch.
         """
         origin = self.repo.remotes.origin
-        commits_behind = self.repo.iter_commits('master..origin/master')
-        return sum(1 for _ in commits_behind) > 0
+        rcommit = origin.fetch()[0].commit
+        return rcommit.hexsha != self.repo.commit().hexsha
 
     def pull_updates(self):
         """
