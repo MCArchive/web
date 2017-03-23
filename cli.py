@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os.path
 from argparse import ArgumentParser
 import json
@@ -100,7 +102,6 @@ def archive(args):
         if vsn.archive_public():
             print("Making file public")
             set_publicity(bkt.Object(dfile), True)
-    #print(json.dumps(mod.to_json(), indent=4))
 
 def check(args):
     bkt = get_bucket(args)
@@ -129,6 +130,19 @@ def check(args):
             bad = True
     if not bad: print('No orphans found')
 
+def set_acl(args):
+    bkt = get_bucket(args)
+    mods = load_mods(args)
+    for _, m in mods.items():
+        for v in m.versions:
+            if v.archived != '':
+                if v.archive_public():
+                    print('Making ' + v.archived + ' public')
+                    set_publicity(bkt.Object(v.archived), True)
+                else:
+                    print('Making ' + v.archived + ' private')
+                    set_publicity(bkt.Object(v.archived), False)
+
 
 parser = ArgumentParser(description='A command line interface for managing the archive')
 subp = parser.add_subparsers()
@@ -140,6 +154,9 @@ pars_archive.set_defaults(func=archive)
 
 pars_orphans = subp.add_parser('check', help='finds orphaned files and missing archived files')
 pars_orphans.set_defaults(func=check)
+
+pars_acl = subp.add_parser('setacl', help='sets appropriate access control on ALL files (may take a while)')
+pars_acl.set_defaults(func=set_acl)
 
 pars_upload = subp.add_parser('upload', help='upload a file to the archive and print its filename')
 pars_upload.add_argument('file')
