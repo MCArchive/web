@@ -13,7 +13,7 @@ def get_bucket(args):
     s3 = boto3.resource('s3')
     return s3.Bucket('mcarch')
 
-def load_mods():
+def load_mods(args):
     return metafile.load_mods(os.path.join(repo_path, 'mods'))
 
 def hash_file(path):
@@ -66,7 +66,7 @@ def add_archived_entry(mod, vsn, dfile):
         print('Couldn\'t find name entry for '+vsn)
         return
     lines.insert(idx+1, indent_sp + '"archived": "' + dfile + '"' + comma + '\n')
-    with open(mod , 'w') as f:
+    with open(mod, 'w') as f:
         f.writelines(lines)
     print('Added archived field to file')
 
@@ -102,6 +102,34 @@ def archive(args):
             set_publicity(bkt.Object(dfile), True)
     #print(json.dumps(mod.to_json(), indent=4))
 
+def check(args):
+    bkt = get_bucket(args)
+    mods = load_mods(args)
+
+    print("Finding missing files referenced by versions (may take some time)")
+    bad = False
+    # Keep track of which files are referenced (for later)
+    refed = set()
+    for _, m in mods.items():
+        for v in m.versions:
+            if v.archived != None:
+                refed.add(v.archived)
+                try:
+                    bkt.Object(v.archived).load()
+                except:
+                    print('Missing ' + v.archived)
+                    bad = True
+    if not bad: print('All archived files accounted for')
+
+    print('Finding orphaned files')
+    bad = False
+    for obj in bkt.objects.all():
+        if obj.key not in refed:
+            print('File ' + obj.key + ' is not refered to by any version')
+            bad = True
+    if not bad: print('No orphans found')
+
+
 parser = ArgumentParser(description='A command line interface for managing the archive')
 subp = parser.add_subparsers()
 
@@ -109,6 +137,9 @@ pars_archive = subp.add_parser('archive', help='archives the given files for the
 pars_archive.add_argument('mod', help='path to the mod\'s json file')
 pars_archive.add_argument('files', nargs='+', help='list of files to add to the archive')
 pars_archive.set_defaults(func=archive)
+
+pars_orphans = subp.add_parser('check', help='finds orphaned files and missing archived files')
+pars_orphans.set_defaults(func=check)
 
 pars_upload = subp.add_parser('upload', help='upload a file to the archive and print its filename')
 pars_upload.add_argument('file')
