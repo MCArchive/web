@@ -44,6 +44,13 @@ main, header, footer {
     background-color: #8d8;
 }
 
+hr {
+    /* This removes the ugly inset border. It's 2017, that stuff is ugly now */
+    border-style: solid;
+    border-bottom-width: 0;
+    border-color: #CCC;
+}
+
 body {
     color: #666;
     font-size: 10pt;
