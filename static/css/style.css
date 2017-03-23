@@ -13,6 +13,9 @@ main, header, footer {
     border-color: #CACACA;
     background-color: #efefef;
 }
+.version h4 {
+    margin: 0px 0px;
+}
 
 /* Make p tags in versions more compact */
 .version p, .version h3 {
@@ -55,6 +58,10 @@ h2 {
 }
 h3 {
     font-size: 14pt;
+    color: #444;
+}
+h4 {
+    font-size: 11pt;
     color: #444;
 }
 

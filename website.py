@@ -21,7 +21,8 @@ def utility_funcs():
         else: return ty
     return dict(
         url_type_name=url_type_name,
-        meta_revision=meta_revision
+        meta_revision=meta_revision,
+        len=len # This isn't available by default for some reason
     )
 
 @app.route('/')

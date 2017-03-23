@@ -9,16 +9,23 @@
 
 {% for vsn in mod.versions %}
 <div class="version">
-    <h3>{{ vsn.name }}</h3>
+    <h3>
+        {{ vsn.name }}
+        {% if len(vsn.mcvsn) > 0 %}
+        for Minecraft {{ ", ".join(vsn.mcvsn) }}
+        {% endif %}
+    </h3>
 
     {% if vsn.desc != "" %}
     <p>{{ vsn.desc }}</p>
     {% endif %}
-    <p>Supports Minecraft {{ ", ".join(vsn.mcvsn) }}</p>
-    <p>Checksum ({{ vsn.hash.type_ }}): {{ vsn.hash.digest }}</p>
 
+    {% for file in vsn.files %}
+    <hr/>
+    <h4>{{ file.filename }}</h4>
+    <p>Checksum ({{ file.hash.type_ }}): {{ file.hash.digest }}</p>
     <ul class="urls">
-        {% for url in vsn.visible_urls() %}
+        {% for url in file.visible_urls() %}
         <li><a href="{{ url.url }}">
             {{ url_type_name(url.type_) }}
             {% if url.desc != '' %}
@@ -27,6 +34,8 @@
         </a></li>
         {% endfor %}
     </ul>
+    {% endfor %}
+
 </div>
 {% endfor %}
 

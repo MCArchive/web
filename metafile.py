@@ -16,17 +16,14 @@ class ModUrl(JsonObject):
     url = StringProperty(required=True)
     desc = StringProperty(default='')
 
-class ModVersion(JsonObject):
+class ModVsnFile(JsonObject):
     """
-    Holds metadata about a specific version of a mod.
+    Holds metadata about a file within a version.
     """
-    name = StringProperty(required=True)
     filename = StringProperty(required=True)
-    desc = StringProperty(default="")
-    mcvsn = ListProperty(str, required=True)
+    archived = StringProperty(default='')
     hash_ = ObjectProperty(ModHash, name='hash', required=True)
     urls = ListProperty(ModUrl)
-    archived = StringProperty(default='')
 
     def archive_public(self):
         """
@@ -52,6 +49,15 @@ class ModVersion(JsonObject):
             return lst
         else:
             return self.urls
+
+class ModVersion(JsonObject):
+    """
+    Holds metadata about a specific version of a mod.
+    """
+    name = StringProperty(required=True)
+    desc = StringProperty(default="")
+    mcvsn = ListProperty(str, required=True)
+    files = ListProperty(ModVsnFile, required=True)
 
 class ModMeta(JsonObject):
     """
