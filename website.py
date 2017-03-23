@@ -1,12 +1,57 @@
 from metafile import load_mods
 from repomgmt import MetaRepo
 
+import time
+import threading
+import schedule
+import logging
+
 from flask import Flask, render_template, abort
 app = Flask(__name__)
 
 app.repo = MetaRepo('repo')
 app.meta_rev = app.repo.current_rev_str()
 app.mods = load_mods('repo/mods')
+
+def run_schedule(interval=1):
+    """
+    Continuously run scheduled jobs. Taken from
+    https://github.com/mrhwick/schedule/blob/8e1d5f806d34d9ecde3c068490c8d1513ed774c3/schedule/__init__.py#L63
+    """
+    cease_continuous_run = threading.Event()
+
+    class ScheduleThread(threading.Thread):
+        def __init__(self, app):
+            super().__init__()
+            self.app = app
+
+        def run(self):
+            with self.app.app_context():
+                while not cease_continuous_run.is_set():
+                    schedule.run_pending()
+                    time.sleep(interval)
+
+    continuous_thread = ScheduleThread(app)
+    continuous_thread.start()
+    return cease_continuous_run
+
+def repo_update():
+    """
+    Called periodically to update the git repository.
+    """
+    logger = logging.getLogger(__name__)
+    logger.info('Checking for meta repository updates')
+    if app.repo.check_updates():
+        logger.info('Updates found. Pulling changes')
+        app.repo.pull_updates()
+        logger.info('Done. Reloading mods')
+        app.meta_rev = app.repo.current_rev_str()
+        app.mods = load_mods('repo/mods')
+    else:
+        logger.info('No updates found')
+
+schedule.every(3).minutes.do(repo_update)
+run_schedule()
 
 # This adds utility functions to the template engine.
 @app.context_processor
