@@ -1,6 +1,7 @@
 from metafile import load_mods
-from repomgmt import MetaRepo
+import repomgmt
 
+import os.path
 import time
 import threading
 import schedule
@@ -9,9 +10,14 @@ import logging
 from flask import Flask, render_template, abort
 app = Flask(__name__)
 
-app.repo = MetaRepo('repo')
+repo_url = 'https://github.com/MCArchive/metarepo.git'
+
+app.repo = repomgmt.clone_temp(repo_url)
 app.meta_rev = app.repo.current_rev_str()
-app.mods = load_mods('repo/mods')
+
+def load_all_mods():
+    app.mods = load_mods(os.path.join(app.repo.path, 'mods'))
+load_all_mods()
 
 def run_schedule(interval=1):
     """
@@ -39,6 +45,7 @@ def repo_update():
     """
     Called periodically to update the git repository.
     """
+    print('Updating repo')
     logger = logging.getLogger(__name__)
     logger.info('Checking for meta repository updates')
     if app.repo.check_updates():
@@ -46,7 +53,7 @@ def repo_update():
         app.repo.pull_updates()
         logger.info('Done. Reloading mods')
         app.meta_rev = app.repo.current_rev_str()
-        app.mods = load_mods('repo/mods')
+        load_all_mods()
     else:
         logger.info('No updates found')
 
