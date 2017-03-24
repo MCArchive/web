@@ -17,6 +17,15 @@ main, header, footer {
     margin: 0px 0px;
 }
 
+/* Creates a small sub-block in a block with a horizontal rule above it */
+.sub-block {
+    border-style: solid;
+    border-width: 0px;
+    border-top-width: 1px;
+    border-color: #CACACA;
+    padding-top: 8px;
+}
+
 /* Make p tags in blocks more compact */
 .block p, .block h3 {
     margin-top: 5px;

@@ -21,21 +21,21 @@
     {% endif %}
 
     {% for file in vsn.files %}
-    <hr/>
-    <h4 class="file-name">{{ file.filename }}</h4>
-    <p>Checksum ({{ file.hash.type_ }}): <span class="hash">{{ file.hash.digest }}</span></p>
-    <ul class="urls">
-        {% for url in file.visible_urls() %}
-        <li><a class="btn" href="{{ url.url }}">
-            {{ url_type_name(url.type_) }}
-            {% if url.desc != '' %}
-            ({{ url.desc }})
-            {% endif %}
-        </a></li>
-        {% endfor %}
-    </ul>
+    <div class="sub-block">
+        <h4 class="file-name">{{ file.filename }}</h4>
+        <p>Checksum ({{ file.hash.type_ }}): <span class="hash">{{ file.hash.digest }}</span></p>
+        <ul class="urls">
+            {% for url in file.visible_urls() %}
+            <li><a class="btn" href="{{ url.url }}">
+                {{ url_type_name(url.type_) }}
+                {% if url.desc != '' %}
+                ({{ url.desc }})
+                {% endif %}
+            </a></li>
+            {% endfor %}
+        </ul>
+    </div>
     {% endfor %}
-
 </div>
 {% endfor %}
 
