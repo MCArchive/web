@@ -48,8 +48,8 @@ main, header, footer {
 a {
     color: #4a4;
 }
-h3 a {
-    text-decoration: none;
+a:hover {
+    color: #5b5;
 }
 
 hr {
