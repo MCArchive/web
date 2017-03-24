@@ -6,7 +6,11 @@
 <p>This is a list of mods available from the archive.</p>
 
 {% for id, mod in mods.items() %}
-<p><a href="{{ url_for('mod_page', id=id) }}">{{ mod.name }}</a></p>
+<div class="block">
+<h3><a href="{{ url_for('mod_page', id=id) }}">{{ mod.name }}</a></h3>
+<p>Supports Minecraft {{ ", ".join(mod.mc_versions()) }}</p>
+<p>{{ mod.desc }}</p>
+</div>
 {% endfor %}
 
 {% endblock %}

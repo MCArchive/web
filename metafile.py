@@ -68,6 +68,17 @@ class ModMeta(JsonObject):
     desc = StringProperty(default='')
     versions = ListProperty(ModVersion, required=True)
 
+    def mc_versions(self):
+        """
+        Computes a list of all supported Minecraft versions
+        """
+        mcvsns = []
+        for v in self.versions:
+            for mcv in v.mcvsn:
+                if mcv not in mcvsns:
+                    mcvsns.append(mcv)
+        return mcvsns
+
 
 def load_mod_file(path):
     with open(path, 'r') as f:

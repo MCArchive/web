@@ -4,8 +4,8 @@ main, header, footer {
     max-width: 800px;
 }
 
-/* Class for the box around archived versions */
-.version {
+/* Class for the box around entries in mod and version lists */
+.block {
     border-style: solid;
     border-width: 1px;
     padding: 12px 20px;
@@ -13,12 +13,12 @@ main, header, footer {
     border-color: #CACACA;
     background-color: #efefef;
 }
-.version h4 {
+.block h4 {
     margin: 0px 0px;
 }
 
-/* Make p tags in versions more compact */
-.version p, .version h3 {
+/* Make p tags in blocks more compact */
+.block p, .block h3 {
     margin-top: 5px;
     margin-bottom: 5px;
 }
@@ -31,7 +31,8 @@ main, header, footer {
     display: inline;
     margin: 0px 4px;
 }
-.urls li a {
+
+.btn {
     border-style: solid;
     border-width: 1px;
     border-color: #5a5;
@@ -40,8 +41,15 @@ main, header, footer {
     color: white;
     text-decoration: none;
 }
-.urls li a:hover {
+.btn:hover {
     background-color: #8d8;
+}
+
+a {
+    color: #4a4;
+}
+h3 a {
+    text-decoration: none;
 }
 
 hr {

@@ -8,7 +8,7 @@
 <h2>Archived Versions</h2>
 
 {% for vsn in mod.versions %}
-<div class="version">
+<div class="block">
     <h3>
         {{ vsn.name }}
         {% if len(vsn.mcvsn) > 0 %}
@@ -26,7 +26,7 @@
     <p>Checksum ({{ file.hash.type_ }}): <span class="hash">{{ file.hash.digest }}</span></p>
     <ul class="urls">
         {% for url in file.visible_urls() %}
-        <li><a href="{{ url.url }}">
+        <li><a class="btn" href="{{ url.url }}">
             {{ url_type_name(url.type_) }}
             {% if url.desc != '' %}
             ({{ url.desc }})
