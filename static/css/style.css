@@ -43,6 +43,7 @@ main, header, footer {
 }
 .btn:hover {
     background-color: #8d8;
+    color: white;
 }
 
 a {
