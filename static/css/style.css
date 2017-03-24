@@ -104,6 +104,7 @@ h4.file-name {
 }
 .hash {
     font-family: 'Source Code Pro';
+    overflow-wrap: break-word;
 }
 
 textarea {
