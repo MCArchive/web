@@ -40,6 +40,9 @@ main, header, footer {
     display: inline;
     margin: 0px 4px;
 }
+.urls li:first-child {
+    margin-left: 0px;
+}
 
 .btn {
     border-style: solid;
