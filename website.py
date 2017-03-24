@@ -1,6 +1,7 @@
 from metafile import load_mods
 import repomgmt
 
+import os
 import os.path
 import time
 import threading
@@ -9,6 +10,8 @@ import logging
 
 from flask import Flask, render_template, abort
 app = Flask(__name__)
+
+app.config['ANALYTICS_ID'] = os.environ.get('MCA_ANALYTICS_ID')
 
 repo_url = 'https://github.com/MCArchive/metarepo.git'
 
