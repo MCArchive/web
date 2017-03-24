@@ -52,18 +52,23 @@ main, header, footer {
     padding: 4px 12px;
     color: white;
     text-decoration: none;
+    transition: background-color 0.2s;
 }
 .btn:hover {
     background-color: #8d8;
     color: white;
 }
+.btn:active {
+    background-color: #5a5;
+    color: white;
+}
 
 a {
     color: #4a4;
+    transition: color 0.3s;
 }
-a:hover {
-    color: #5b5;
-}
+a:hover { color: #7c7; }
+a:active { color: #282; }
 
 hr {
     /* This removes the ugly inset border. It's 2017, that stuff is ugly now */
