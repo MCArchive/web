@@ -11,6 +11,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
+    <nav>
+        <div class="container">
+            <a class="logo" href="{{ url_for('home') }}">Minecraft Archive</a>
+            <a href="{{ url_for('mod_list') }}">Browse</a>
+        </div>
+    </nav>
     <main>
         {% block body %}{% endblock %}
     </main>
