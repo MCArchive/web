@@ -13,7 +13,7 @@ repo_path = 'repo'
 
 def get_bucket(args):
     s3 = boto3.resource('s3')
-    return s3.Bucket('mcarch')
+    return s3.Bucket('files.mcarchive.net')
 
 def load_mods(args):
     return metafile.load_mods(os.path.join(repo_path, 'mods'))
@@ -122,7 +122,7 @@ def check(args):
     for _, m in mods.items():
         for v in m.versions:
             for f in v.files:
-                if f.archived != None:
+                if f.archived != None and f.archived != '':
                     refed.add(f.archived)
                     try:
                         bkt.Object(f.archived).load()

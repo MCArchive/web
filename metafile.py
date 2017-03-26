@@ -6,7 +6,7 @@ import json
 from jsonobject import *
 
 # FIXME: Don't hard-code this
-s3url = "http://mcarch.s3-website-us-west-2.amazonaws.com/"
+s3url = "https://files.mcarchive.net/"
 
 class ModHash(JsonObject):
     type_ = StringProperty(name='type')
