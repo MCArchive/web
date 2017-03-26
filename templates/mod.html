@@ -46,7 +46,7 @@
 {% endif %}
 
 {% if len(vsns) > 1 %}
-<button class="accbtn">More</button>
+<button class="accbtn">{{ len(vsns) - 1 }} more</button>
 <div class="accordion hidden">
     {% for vsn in vsns[1:] %}
     {{ vsnblock(vsn) }}
