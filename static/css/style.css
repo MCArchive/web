@@ -109,22 +109,26 @@ nav a:active {
     margin-left: 0px;
 }
 
-.btn {
+button, .btn {
     background-color: #6b6;
     padding: 4px 12px;
     color: white;
     text-decoration: none;
     transition: background-color 0.2s, box-shadow 0.2s, color 0.2s;
+    border-style: none;
     border-radius: 2px;
 }
-.btn:hover {
+button:hover, .btn:hover {
     background-color: #5a5;
     color: white;
 }
-.btn:active {
+button:active, button.active, .btn:active {
     background-color: #494;
     box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.28);
     color: #eee;
+}
+button:focus {
+    outline-style: none;
 }
 
 a {
@@ -192,6 +196,15 @@ footer p {
     color: #888;
     font-size: 10pt;
     margin: 0px 0px;
+}
+
+/* Accordion */
+.accordion {
+    transition: max-height 0.4s;
+    overflow: hidden;
+}
+.accordion.hidden {
+    max-height: 0;
 }
 
 

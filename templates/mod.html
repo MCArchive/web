@@ -1,13 +1,6 @@
 {% extends "base.html" %}
 
-{% block body %}
-
-<h1>{{ mod.name }}</h1>
-<p>{{ mod.desc }}</p>
-
-<h2>Archived Versions</h2>
-
-{% for vsn in mod.versions %}
+{% macro vsnblock(vsn) %}
 <div class="block">
     <h3>
         {{ vsn.name }}
@@ -37,6 +30,30 @@
     </div>
     {% endfor %}
 </div>
+{% endmacro %}
+
+{% block body %}
+
+<h1>{{ mod.name }}</h1>
+<p>{{ mod.desc }}</p>
+
+{% for mcv, vsns in mod.vsns_by_mcvsn().items() %}
+
+<h2>For Minecraft {{ mcv }}</h2>
+
+{% if len(vsns) > 0 %}
+{{ vsnblock(vsns[0]) }}
+{% endif %}
+
+{% if len(vsns) > 1 %}
+<button class="accbtn">More</button>
+<div class="accordion hidden">
+    {% for vsn in vsns[1:] %}
+    {{ vsnblock(vsn) }}
+    {% endfor %}
+</div>
+{% endif %}
+
 {% endfor %}
 
 {% endblock %}

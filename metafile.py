@@ -1,5 +1,6 @@
 import os
 import os.path
+from collections import OrderedDict
 
 import json
 from jsonobject import *
@@ -79,6 +80,15 @@ class ModMeta(JsonObject):
                     mcvsns.append(mcv)
         return mcvsns
 
+    def vsns_by_mcvsn(self):
+        """
+        Returns a dict mapping supported Minecraft versions to a list of
+        versions that support that Minecraft version.
+        """
+        vsns = OrderedDict()
+        for v in self.versions:
+            vsns.setdefault(v.mcvsn[0], []).append(v)
+        return vsns
 
 def load_mod_file(path):
     with open(path, 'r') as f:
