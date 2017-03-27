@@ -4,6 +4,7 @@ import repomgmt
 import os
 import os.path
 import time
+from datetime import datetime
 import threading
 import schedule
 import logging
@@ -44,6 +45,7 @@ def run_schedule(interval=1):
     continuous_thread.start()
     return cease_continuous_run
 
+update_time = datetime.now()
 def repo_update():
     """
     Called periodically to update the git repository.
@@ -59,9 +61,14 @@ def repo_update():
         load_all_mods()
     else:
         logger.info('No updates found')
+    update_time = datetime.now()
 
 schedule.every(3).minutes.do(repo_update)
 run_schedule()
+
+# Computes the timedelta since the last repo update.
+def time_since_update():
+    return datetime.now() - update_time
 
 # This adds utility functions to the template engine.
 @app.context_processor
@@ -77,6 +84,7 @@ def utility_funcs():
     return dict(
         url_type_name=url_type_name,
         meta_revision=meta_revision,
+        time_since_update=time_since_update,
         len=len # This isn't available by default for some reason
     )
 

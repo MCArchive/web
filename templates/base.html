@@ -21,7 +21,12 @@
         {% block body %}{% endblock %}
     </main>
     <footer>
-        <p>Archive Revision <span class="hash">{{ meta_revision() }}</span></p>
+        <p>Archive Revision <span class="hash">{{ meta_revision() }}</span>
+            (<a href="https://github.com/MCArchive/metarepo">metadata on GitHub</a>)
+            &mdash; last update check
+            {{ time_since_update().seconds // 60 }}m
+            {{ time_since_update().seconds % 60 }}s ago
+        </p>
         <p>Copyright &copy; 2017 Minecraft Mod Archive</p>
     </footer>
 
