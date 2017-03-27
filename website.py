@@ -45,7 +45,7 @@ def run_schedule(interval=1):
     continuous_thread.start()
     return cease_continuous_run
 
-update_time = datetime.now()
+app.update_time = datetime.now()
 def repo_update():
     """
     Called periodically to update the git repository.
@@ -61,14 +61,14 @@ def repo_update():
         load_all_mods()
     else:
         logger.info('No updates found')
-    update_time = datetime.now()
+    app.update_time = datetime.now()
 
 schedule.every(3).minutes.do(repo_update)
 run_schedule()
 
 # Computes the timedelta since the last repo update.
 def time_since_update():
-    return datetime.now() - update_time
+    return datetime.now() - app.update_time
 
 # This adds utility functions to the template engine.
 @app.context_processor
