@@ -7,12 +7,28 @@
 <h1>Archived Mods</h1>
 <p>This is a list of mods available from the archive.</p>
 
-{% for id, mod in mods.items() %}
-<div class="block">
-<h3><a href="{{ url_for('mod_page', id=id) }}">{{ mod.name }}</a></h3>
-<p>Supports Minecraft {{ ", ".join(mod.mc_versions()) }}</p>
-<p>{{ mod.desc }}</p>
-</div>
-{% endfor %}
+<div id="mods">
+    <input class="search" placeholder="Search" />
 
+    <div class="list">
+        {% for id, mod in mods.items() %}
+        <div class="block">
+            <h3 class="modname"><a href="{{ url_for('mod_page', id=id) }}">{{ mod.name }}</a></h3>
+            <p class="mcvsn">Supports Minecraft {{ ", ".join(mod.mc_versions()) }}</p>
+            <p>{{ mod.desc }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+ var listOpts = {
+     valueNames: [ 'modname', 'mcvsn' ],
+ };
+
+ var list = new List('mods', listOpts);
+</script>
 {% endblock %}

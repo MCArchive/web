@@ -72,7 +72,7 @@ nav a:active {
     border-style: solid;
     border-width: 1px;
     padding: 12px 20px;
-    margin: 8px 4px;
+    margin: 8px 0px;
     border-color: #ccc;
     background-color: #eee;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.28);
@@ -137,6 +137,18 @@ a {
 }
 a:hover { color: #7c7; }
 a:active { color: #282; }
+
+input {
+    background-color: #fff;
+    padding: 4px 8px;
+    transition: box-shadow 0.2s;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+input:focus {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.28);
+    outline-style: none;
+}
 
 hr {
     /* This removes the ugly inset border. It's 2017, that stuff is ugly now */
