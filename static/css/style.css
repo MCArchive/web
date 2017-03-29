@@ -22,7 +22,7 @@ nav {
     left: 0;
     top: 0;
     right: 0;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.28);
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.28);
 }
 nav .container {
     height: 100%;
@@ -39,7 +39,7 @@ nav a {
     height: 24px;
     line-height: 24px;
     font-size: 12pt;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, box-shadow 0.2s;
 }
 nav a:last-child {
     border-right-width: 1px;
@@ -48,9 +48,10 @@ nav a:hover {
     background-color: #fff;
     color: #444;
 }
-nav a:active {
+nav a:active, nav a.active {
     background-color: #ddd;
     color: #444;
+    box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.28);
 }
 .logo {
     font-size: 16pt;
@@ -65,6 +66,7 @@ nav a:active {
 }
 .logo:hover, .logo:active {
     background-color: rgba(0, 0, 0, 0);
+    box-shadow: none;
 }
 
 /* Class for the box around entries in mod and version lists */
@@ -75,7 +77,7 @@ nav a:active {
     margin: 8px 0px;
     border-color: #ccc;
     background-color: #eee;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.28);
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.28);
     border-radius: 2px;
 }
 .block h4 {
@@ -95,6 +97,11 @@ nav a:active {
 .block p, .block h3 {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+/* A red block used to display warnings. */
+.block.warning {
+    background-color: #ffc;
 }
 
 .urls {
@@ -146,7 +153,7 @@ input {
     border-radius: 2px;
 }
 input:focus {
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.28);
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.28);
     outline-style: none;
 }
 
@@ -219,6 +226,13 @@ footer p {
     max-height: 0;
 }
 
+/* Remove ugly dotted outlines in Firefox */
+::-moz-focus-inner {
+  border: 0;
+}
+:focus {
+  outline: none;
+}
 
 /* Desktop */
 @media only screen and (min-width:800px) {

@@ -1,3 +1,7 @@
+{% macro nav_btn(url, text) %}
+<a href="{{ url }}" {% if request.path == url %}class="active"{% endif %}>{{ text }}</a>
+{% endmacro %}
+
 <!doctype html>
 <head>
   <title>{% block title %}{% endblock %} &ndash; Minecraft Archive</title>
@@ -14,10 +18,17 @@
     <nav>
         <div class="container">
             <a class="logo" href="{{ url_for('home') }}">Minecraft Archive</a>
-            <a href="{{ url_for('mod_list') }}">Browse</a>
+            {{ nav_btn(url_for('mod_list'), "Browse") }}
         </div>
     </nav>
     <main>
+        <noscript>
+            <div class="block warning">
+                <p>JavaScript is disabled. This website should still be usable
+                without it, but some features (such as searching) won't work.
+                </p>
+            </div>
+        </noscript>
         {% block body %}{% endblock %}
     </main>
     <footer>
