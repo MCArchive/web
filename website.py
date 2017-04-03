@@ -9,18 +9,25 @@ import threading
 import schedule
 import logging
 
-from flask import Flask, render_template, abort
+import ipfsapi
+import ipfsutil
+
+from flask import Flask, render_template, abort, make_response
 app = Flask(__name__)
 
 app.config['ANALYTICS_ID'] = os.environ.get('MCA_ANALYTICS_ID')
 
 repo_url = 'https://github.com/MCArchive/metarepo.git'
 
+app.ipfs = ipfsapi.connect()
 app.repo = repomgmt.clone_temp(repo_url)
 app.meta_rev = app.repo.current_rev_str()
 
 def load_all_mods():
     app.mods = load_mods(os.path.join(app.repo.path, 'mods'))
+    print('Creating IPFS links')
+    app.flinks = ipfsutil.mk_links(app.ipfs, app.mods)
+    print('Done')
 load_all_mods()
 
 def run_schedule(interval=1):
@@ -70,6 +77,12 @@ run_schedule()
 def time_since_update():
     return datetime.now() - app.update_time
 
+def ipfs_url(fname, fhash):
+    """
+    Gets the URL in IPFS of the file with the given name and hash.
+    """
+    return "https://ipfs.io/ipfs/" + app.flinks[(fname, fhash)]
+
 # This adds utility functions to the template engine.
 @app.context_processor
 def utility_funcs():
@@ -78,6 +91,7 @@ def utility_funcs():
 
     def url_type_name(ty):
         if ty == 'archived': return 'Archived File'
+        elif ty == 'ipfs': return 'IPFS Download'
         elif ty == 'original': return 'Official Download'
         elif ty == 'page': return 'Official Download Page'
         else: return ty
@@ -85,6 +99,7 @@ def utility_funcs():
         url_type_name=url_type_name,
         meta_revision=meta_revision,
         time_since_update=time_since_update,
+        ipfs_url=ipfs_url,
         len=len # This isn't available by default for some reason
     )
 
@@ -100,5 +115,5 @@ def mod_list():
 def mod_page(id):
     if id in app.mods:
         mod = app.mods[id]
-        return render_template('mod.html', mod=mod)
+        return render_template('mod.html', mod=mod, mod_id=id)
     else: abort(404)

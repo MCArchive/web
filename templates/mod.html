@@ -21,7 +21,13 @@
         <p>Checksum ({{ file.hash.type_ }}): <span class="hash">{{ file.hash.digest }}</span></p>
         <ul class="urls">
             {% for url in file.visible_urls() %}
-            <li><a class="btn" href="{{ url.url }}">
+            <li><a class="btn"
+                   {% if url.type == "ipfs" %}
+                   href="{{ ipfs_url(file.filename, file.hash_.digest) }}"
+                   {% else %}
+                   href="{{ url.url }}"
+                   {% endif %}
+                >
                 {{ url_type_name(url.type_) }}
                 {% if url.desc != '' %}
                 ({{ url.desc }})

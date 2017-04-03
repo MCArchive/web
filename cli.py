@@ -2,10 +2,12 @@
 
 import os.path
 from argparse import ArgumentParser
+import tempfile
 import json
 import re
 import hashlib
 import boto3
+import ipfsapi
 
 import metafile
 
@@ -45,12 +47,12 @@ def file_s3_key(fpath, fhash):
     """
     return fhash + "/" + os.path.basename(fpath)
 
-def add_archived_entry(mod, mfile, dfile):
+def add_json_entry(mod, mfile, field):
     """
-    Adds an `archived` fild to the given version in the mod file without
-    disturbing the file's formatting or field ordering in the file.
+    Adds a json field to the given version in the mod file without disturbing
+    the file's formatting or field ordering in the file.
 
-    This is done by just inserting a line after the `name` field.
+    This is done by just inserting a line after the `filename` field.
     """
     fname = os.path.basename(mfile)
     with open(mod, 'r') as f:
@@ -68,7 +70,7 @@ def add_archived_entry(mod, mfile, dfile):
     if idx < 0:
         print('Couldn\'t find filename entry for '+mfile)
         return
-    lines.insert(idx+1, indent_sp + '"archived": "' + dfile + '"' + comma + '\n')
+    lines.insert(idx+1, indent_sp + field + comma + '\n')
     with open(mod, 'w') as f:
         f.writelines(lines)
     print('Added archived field to file')
@@ -83,20 +85,27 @@ def upload(args):
     upload_file(bkt, path, dfile)
     print('Done')
 
+def find_file_vsn(mod, path):
+    vsn = None
+    modf = None
+    for v in mod.versions:
+        for f in v.files:
+            if os.path.basename(path) == f.filename:
+                vsn = v
+                modf = f
+                break
+    return vsn, modf
+
 def archive(args):
     bkt = get_bucket(args)
     mod = metafile.load_mod_file(args.mod)
     for path in args.files:
-        vsn = None
-        modf = None
-        for v in mod.versions:
-            for f in v.files:
-                if os.path.basename(path) == f.filename:
-                    vsn = v
-                    modf = f
-                    break
+        vsn, modf = find_file_vsn(mod, path)
         if modf is None:
             print("No version found for file " + path)
+            continue
+        if modf.archived != '':
+            print("{} is already in S3. Skipping".format(modf.filename))
             continue
         fhash = hash_file(path)
         # TODO: Check hash type
@@ -106,10 +115,53 @@ def archive(args):
         dfile = file_s3_key(path, fhash)
         print("Uploading file to "+dfile)
         upload_file(bkt, path, dfile)
-        add_archived_entry(args.mod, path, dfile)
+        add_json_entry(args.mod, path, '"archived": "' + dfile + '"')
         if modf.archive_public():
             print("Making file public")
             set_publicity(bkt.Object(dfile), True)
+
+def archive_ipfs(args):
+    ipfs = ipfsapi.connect()
+    mod = metafile.load_mod_file(args.mod)
+    for path in args.files:
+        vsn, modf = find_file_vsn(mod, path)
+        if modf is None:
+            print("No version found for file " + path)
+            continue
+        if modf.ipfs != '':
+            print("{} is already in IPFS. Skipping".format(modf.filename))
+            continue
+        fhash = hash_file(path)
+        if fhash != modf.hash_.digest:
+            print("Hash mismatch for {}\nExpected:\t{}\nActual:\t{}".format(path, modf.hash_.digest, fhash))
+            continue
+        result = ipfs.add(path)
+        print(result)
+        print('Added {}'.format(result['Hash']))
+        add_json_entry(args.mod, path, '"ipfs": "' + result['Hash'] + '"')
+
+def s3_to_ipfs(args):
+    ipfs = ipfsapi.connect()
+    bkt = get_bucket(args)
+    mod = metafile.load_mod_file(args.mod)
+    for vsn in mod.versions:
+        for modf in vsn.files:
+            if modf.archived == '':
+                print('{} is not in S3. Skipping'.format(modf.filename))
+                continue
+            if modf.ipfs != '':
+                print('{} is already in IPFS. Skipping'.format(modf.filename))
+                continue
+            _, path = tempfile.mkstemp()
+            try:
+                obj = bkt.Object(modf.archived)
+                print('Fetching {} from S3'.format(modf.filename))
+                obj.download_file(path)
+                print('Adding to IPFS')
+                result = ipfs.add(path)
+                add_json_entry(args.mod, modf.filename, '"ipfs": "' + result['Hash'] + '"')
+            finally:
+                os.remove(path)
 
 def check(args):
     bkt = get_bucket(args)
@@ -161,6 +213,15 @@ pars_archive = subp.add_parser('archive', help='archives the given files for the
 pars_archive.add_argument('mod', help='path to the mod\'s json file')
 pars_archive.add_argument('files', nargs='+', help='list of files to add to the archive')
 pars_archive.set_defaults(func=archive)
+
+pars_archipfs = subp.add_parser('archipfs', help='archives the given files for their associated versions using IPFS')
+pars_archipfs.add_argument('mod', help='path to the mod\'s json file')
+pars_archipfs.add_argument('files', nargs='+', help='list of files to add to the archive')
+pars_archipfs.set_defaults(func=archive_ipfs)
+
+pars_s3ipfs = subp.add_parser('s3ipfs', help='adds files in S3 to IPFS')
+pars_s3ipfs.add_argument('mod', help='path to the mod\'s json file')
+pars_s3ipfs.set_defaults(func=s3_to_ipfs)
 
 pars_orphans = subp.add_parser('check', help='finds orphaned files and missing archived files')
 pars_orphans.set_defaults(func=check)

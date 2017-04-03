@@ -24,6 +24,7 @@ class ModVsnFile(JsonObject):
     filename = StringProperty(required=True)
     archived = StringProperty(default='')
     hash_ = ObjectProperty(ModHash, name='hash', required=True)
+    ipfs = StringProperty(default='')
     urls = ListProperty(ModUrl)
 
     def archive_public(self):
@@ -32,6 +33,12 @@ class ModVsnFile(JsonObject):
         """
         return not any(map(lambda u: u.type_ == "page", self.urls))
 
+    def ipfs_avail(self):
+        """
+        Returns true if this file is archived in IPFS.
+        """
+        return self.archive_public()
+
     def archive_url(self):
         """
         Determines the URL of the archived file from the given S3 URL and the
@@ -39,17 +46,23 @@ class ModVsnFile(JsonObject):
         """
         return s3url + self.archived
 
+    def ipfs_url(self):
+        """
+        Determines the URL of the archived file in IPFS (accessed via ipfs.io).
+        """
+        return 'https://ipfs.io/ipfs/' + self.ipfs
+
     def visible_urls(self):
         """
         Returns a list of URLs for this version visible to the public. This
         hides our archived URL if an official one is present.
         """
+        lst = self.urls.copy()
+        if self.ipfs != '' and self.archive_public():
+            lst.append(ModUrl(type_="ipfs", url=self.ipfs_url()))
         if self.archived != '' and self.archive_public():
-            lst = self.urls.copy()
             lst.append(ModUrl(type_="archived", url=self.archive_url()))
-            return lst
-        else:
-            return self.urls
+        return lst
 
 class ModVersion(JsonObject):
     """
@@ -59,6 +72,15 @@ class ModVersion(JsonObject):
     desc = StringProperty(default="")
     mcvsn = ListProperty(str, required=True)
     files = ListProperty(ModVsnFile, required=True)
+
+    def get_file(self, fn):
+        """
+        Gets a file by name or returns `None`.
+        """
+        for file in self.files:
+            if file.filename == fn:
+                return file
+        return None
 
 class ModMeta(JsonObject):
     """
@@ -89,6 +111,15 @@ class ModMeta(JsonObject):
         for v in self.versions:
             vsns.setdefault(v.mcvsn[0], []).append(v)
         return vsns
+
+    def get_vsn(self, vn):
+        """
+        Gets a version by name or returns `None`.
+        """
+        for vsn in self.versions:
+            if vsn.name == vn:
+                return vsn
+        return None
 
 def load_mod_file(path):
     with open(path, 'r') as f:
