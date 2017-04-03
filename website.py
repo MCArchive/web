@@ -19,7 +19,21 @@ app.config['ANALYTICS_ID'] = os.environ.get('MCA_ANALYTICS_ID')
 
 repo_url = 'https://github.com/MCArchive/metarepo.git'
 
-app.ipfs = ipfsapi.connect()
+def ipfs_try_conn(*args, **kwargs):
+    try:
+        return ipfsapi.connect('ipfs')
+    except:
+        return None
+
+app.ipfs = ipfs_try_conn()
+while app.ipfs == None:
+    # If the first connection fails, assume we're running in docker and wait
+    # for the service to come up.
+    print('Waiting on IPFS node to be available...')
+    time.sleep(1)
+    print('Trying to connect')
+    app.ipfs = ipfs_try_conn('ipfs')
+
 app.repo = repomgmt.clone_temp(repo_url)
 app.meta_rev = app.repo.current_rev_str()
 

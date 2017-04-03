@@ -1,0 +1,6 @@
+# Compose file for production use
+version: '2'
+services:
+  web:
+    environment:
+      - MCA_ANALYTICS_ID=UA-31451240-6
