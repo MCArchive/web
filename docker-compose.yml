@@ -7,6 +7,8 @@ services:
       - ipfs
     ports:
       - 5000:5000
+    environment:
+      - PYTHONUNBUFFERED=TRUE
   ipfs:
     restart: always
     image: ipfs/go-ipfs
