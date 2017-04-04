@@ -8,6 +8,7 @@ from datetime import datetime
 import threading
 import schedule
 import logging
+import threading
 
 import ipfsapi
 import ipfsutil
@@ -37,13 +38,22 @@ while app.ipfs == None:
 app.repo = repomgmt.clone_temp(repo_url)
 app.meta_rev = app.repo.current_rev_str()
 
+def pin_files_async():
+    """
+    Pins files to IPFS in another thread
+    """
+    def func():
+        print('Pinning files')
+        ipfsutil.pin_files(app.ipfs, app.mods)
+        print('Done')
+    thr = threading.Thread(target=func)
+    thr.start()
+
 def load_all_mods():
     app.mods = load_mods(os.path.join(app.repo.path, 'mods'))
     print('Creating IPFS links')
     app.flinks = ipfsutil.mk_links(app.ipfs, app.mods)
-    print('Pinning files to IPFS')
-    ipfsutil.pin_files(app.ipfs, app.mods)
-    print('Done')
+    pin_files_async()
 load_all_mods()
 
 def run_schedule(interval=1):
