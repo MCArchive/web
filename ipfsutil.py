@@ -32,4 +32,5 @@ def pin_files(ipfs, mods):
         for vsn in mod.versions:
             for file in vsn.files:
                 if file.ipfs != '':
+                    print('Pinning {} ({})'.format(file.ipfs, file.filename))
                     ipfs.pin_add(file.ipfs)
