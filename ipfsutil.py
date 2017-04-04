@@ -28,9 +28,12 @@ def pin_files(ipfs, mods):
     Pins all of the files in the given mod list to the IPFS node. This should
     cause the node to fetch the files and serve them for others to download.
     """
+    pinned = set()
+    for phash, _ in ipfs.pin_ls()['Keys'].items():
+        pinned.add(phash)
     for _, mod in mods.items():
         for vsn in mod.versions:
             for file in vsn.files:
-                if file.ipfs != '':
+                if file.ipfs != '' and file.ipfs not in pinned:
                     print('Pinning {} ({})'.format(file.ipfs, file.filename))
                     ipfs.pin_add(file.ipfs)
