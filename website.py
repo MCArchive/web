@@ -21,7 +21,7 @@ repo_url = 'https://github.com/MCArchive/metarepo.git'
 
 def ipfs_try_conn(*args, **kwargs):
     try:
-        return ipfsapi.connect('ipfs')
+        return ipfsapi.connect(*args, **kwargs)
     except:
         return None
 
@@ -41,6 +41,8 @@ def load_all_mods():
     app.mods = load_mods(os.path.join(app.repo.path, 'mods'))
     print('Creating IPFS links')
     app.flinks = ipfsutil.mk_links(app.ipfs, app.mods)
+    print('Pinning files to IPFS')
+    ipfsutil.pin_files(app.ipfs, app.mods)
     print('Done')
 load_all_mods()
 
