@@ -4,3 +4,7 @@ services:
   web:
     environment:
       - MCA_ANALYTICS_ID=UA-31451240-6
+  ipfs:
+    ports:
+      - 4011:4001
+      - 4012:4002/udp

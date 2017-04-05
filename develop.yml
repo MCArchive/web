@@ -1,0 +1,7 @@
+# Compose file for develop branch use
+version: '2'
+services:
+  ipfs:
+    ports:
+      - 4021:4001
+      - 4022:4002/udp
