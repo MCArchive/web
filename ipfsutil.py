@@ -23,6 +23,22 @@ def mk_links(ipfs, mods):
                 links[(file.filename, file.hash_.digest)] = ipdir['Hash'] + '/' + file.filename
     return links
 
+def pinned_files(ipfs, mods):
+    """
+    Returns a set of all IPFS hashes in the given mods list which are pinned to
+    the node.
+    """
+    files = set()
+    for _, mod in mods.items():
+        for vsn in mod.versions:
+            for file in vsn.files:
+                if file.ipfs != '':
+                    files.add(file.ipfs)
+    pinned = set()
+    for phash, _ in ipfs.pin_ls()['Keys'].items():
+        pinned.add(phash)
+    return pinned.intersection(files)
+
 def pin_files(ipfs, mods):
     """
     Pins all of the files in the given mod list to the IPFS node. This should

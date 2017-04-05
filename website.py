@@ -45,6 +45,7 @@ def pin_files_async():
     def func():
         print('Pinning files')
         ipfsutil.pin_files(app.ipfs, app.mods)
+        app.pins = ipfsutil.pinned_files(app.ipfs, app.mods)
         print('Done')
     thr = threading.Thread(target=func)
     thr.start()
@@ -53,6 +54,7 @@ def load_all_mods():
     app.mods = load_mods(os.path.join(app.repo.path, 'mods'))
     print('Creating IPFS links')
     app.flinks = ipfsutil.mk_links(app.ipfs, app.mods)
+    app.pins = ipfsutil.pinned_files(app.ipfs, app.mods)
     pin_files_async()
 load_all_mods()
 
@@ -109,6 +111,9 @@ def ipfs_url(fname, fhash):
     """
     return "https://ipfs.io/ipfs/" + app.flinks[(fname, fhash)]
 
+def file_is_pinned(mhash):
+    return mhash in app.pins
+
 # This adds utility functions to the template engine.
 @app.context_processor
 def utility_funcs():
@@ -126,6 +131,7 @@ def utility_funcs():
         meta_revision=meta_revision,
         time_since_update=time_since_update,
         ipfs_url=ipfs_url,
+        is_pinned=file_is_pinned,
         len=len # This isn't available by default for some reason
     )
 

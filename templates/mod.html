@@ -24,6 +24,9 @@
             <li><a class="btn"
                    {% if url.type == "ipfs" %}
                    href="{{ ipfs_url(file.filename, file.hash_.digest) }}"
+                   {% if not is_pinned(file.ipfs) %}
+                   disabled
+                   {% endif %}
                    {% else %}
                    href="{{ url.url }}"
                    {% endif %}

@@ -134,6 +134,10 @@ button:active, button.active, .btn:active {
     box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.28);
     color: #eee;
 }
+.btn[disabled] {
+    pointer-events: none;
+    background-color: #aaa;
+}
 button:focus {
     outline-style: none;
 }
