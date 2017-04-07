@@ -80,6 +80,11 @@ nav a:active, nav a.active {
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.28);
     border-radius: 2px;
 }
+/* Make p tags in blocks more compact */
+.block p, .block h1, .block h2, .block h3, .block h4 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 .block h4 {
     margin: 0px 0px;
 }
@@ -91,12 +96,6 @@ nav a:active, nav a.active {
     border-top-width: 1px;
     border-color: #ccc;
     padding-top: 8px;
-}
-
-/* Make p tags in blocks more compact */
-.block p, .block h3 {
-    margin-top: 5px;
-    margin-bottom: 5px;
 }
 
 /* A red block used to display warnings. */
@@ -228,6 +227,13 @@ footer p {
 }
 .accordion.hidden {
     max-height: 0;
+}
+
+ul li.pinned {
+    color: #6b6;
+}
+ul li.pinned:after {
+    content: '✓';
 }
 
 /* Remove ugly dotted outlines in Firefox */

@@ -13,7 +13,7 @@ import threading
 import ipfsapi
 import ipfsutil
 
-from flask import Flask, render_template, abort, make_response
+from flask import Flask, render_template, abort, make_response, Response
 app = Flask(__name__)
 
 app.config['ANALYTICS_ID'] = os.environ.get('MCA_ANALYTICS_ID')
@@ -38,13 +38,20 @@ while app.ipfs == None:
 app.repo = repomgmt.clone_temp(repo_url)
 app.meta_rev = app.repo.current_rev_str()
 
+def file_pinned(hash_):
+    """
+    Callback executed when a file is pinned.
+    """
+    app.pins.add(hash_)
+
 def pin_files_async():
     """
     Pins files to IPFS in another thread
     """
     def func():
         print('Pinning files')
-        ipfsutil.pin_files(app.ipfs, app.mods)
+        app.want_pins = ipfsutil.wanted_pins(app.mods)
+        ipfsutil.pin_files(app.ipfs, app.mods, callback=file_pinned)
         app.pins = ipfsutil.pinned_files(app.ipfs, app.mods)
         print('Done')
     thr = threading.Thread(target=func)
@@ -149,3 +156,12 @@ def mod_page(id):
         mod = app.mods[id]
         return render_template('mod.html', mod=mod, mod_id=id)
     else: abort(404)
+
+
+@app.route('/pins')
+def ipfs_pins():
+    return render_template('pins.html', have_pins=app.pins, want_pins=app.want_pins)
+
+@app.route('/pins/raw')
+def ipfs_pins_raw():
+    return Response('\n'.join(app.want_pins), mimetype='text/plain')

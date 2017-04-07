@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Pinned Files{% endblock %}
+
+{% block body %}
+
+<h1>Pinned Files</h1>
+<p>This is a list of the IPFS objects that make up the archive. If you'd like to
+help mirror the archive, simply pin these hashes to your IPFS node.</p>
+<p>If you'd like to automate pinning these files, click
+<a href="{{ url_for('ipfs_pins_raw') }}">here</a> for a plain-text list of hashes.</p>
+<p>Items with a checkmark are pinned to our IPFS node.</p>
+<p>{{ len(have_pins) }} / {{ len(want_pins) }} pinned</p>
+
+<ul>
+    {% for p in want_pins %}
+    <li {% if p in have_pins %}class="pinned"{% endif %}><span class="hash">{{ p }}</span></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
