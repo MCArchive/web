@@ -38,6 +38,14 @@
             {{ time_since_update().seconds // 60 }}m
             {{ time_since_update().seconds % 60 }}s ago
         </p>
+        <p>
+            {% if 'VSN_GIT' in config %}
+            Website Revision <span class="hash">{{ config.VSN_GIT }}</span>
+            {% else %}
+            Website <em>Development Deployment</em>
+            {% endif %}
+            (<a href="https://github.com/MCArchive/web">fork us on GitHub</a>)
+        </p>
         <p>Copyright &copy; 2017 Minecraft Mod Archive</p>
     </footer>
 

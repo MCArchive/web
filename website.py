@@ -16,6 +16,17 @@ import ipfsutil
 from flask import Flask, render_template, abort, make_response, Response
 app = Flask(__name__)
 
+# The deployment script writes information about the version to a file called
+# DEPLOY_VSN. If this file is not present, we just assume we're running in
+# development mode.
+if os.path.isfile('DEPLOY_VSN'):
+    lines = []
+    with open('DEPLOY_VSN', 'r') as f:
+        lines = f.readlines()
+    # The first line is the git hash.
+    app.config['VSN_GIT'] = lines[0]
+    # more to be added later?
+
 app.config['ANALYTICS_ID'] = os.environ.get('MCA_ANALYTICS_ID')
 
 repo_url = 'https://github.com/MCArchive/metarepo.git'
