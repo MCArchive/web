@@ -10,11 +10,21 @@ help mirror the archive, simply pin these hashes to your IPFS node.</p>
 <p>If you'd like to automate pinning these files, click
 <a href="{{ url_for('ipfs_pins_raw') }}">here</a> for a plain-text list of hashes.</p>
 <p>Items with a checkmark are pinned to our IPFS node.</p>
-<p>{{ len(have_pins) }} / {{ len(want_pins) }} pinned</p>
+<p>
+    {{ len(have_pins) }} / {{ len(want_pins) }} pinned
+    &ndash;
+    {{ size_fmt(archive_size()) }}
+</p>
 
-<ul>
+<ul class="pin-lst">
     {% for p in want_pins %}
-    <li {% if p in have_pins %}class="pinned"{% endif %}><span class="hash">{{ p }}</span></li>
+    <li {% if p in have_pins %}class="pinned"{% endif %}>
+        <span class="hash">{{ p }}</span>
+        {% if p in have_pins %}
+        &ndash; <span class="filesz">{{ size_fmt(have_pins[p]['size']) }}</span>
+        &ndash; <span class="filerefs">{{ ",".join(have_pins[p]['files']) }}</span>
+        {% endif %}
+    </li>
     {% endfor %}
 </ul>
 

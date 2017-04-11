@@ -229,10 +229,16 @@ footer p {
     max-height: 0;
 }
 
-ul li.pinned {
+ul.pin-lst {
+    list-style: none;
+}
+ul.pin-lst li.pinned {
     color: #6b6;
 }
-ul li.pinned:after {
+ul.pin-lst li:before {
+    content: 'X';
+}
+ul.pin-lst li.pinned:before {
     content: '✓';
 }
 

@@ -24,12 +24,15 @@ def mk_links(ipfs, mods):
     return links
 
 def wanted_pins(mods):
-    files = set()
+    files = dict()
     for _, mod in mods.items():
         for vsn in mod.versions:
             for file in vsn.files:
                 if file.ipfs != '':
-                    files.add(file.ipfs)
+                    if file.ipfs not in files:
+                        files[file.ipfs] = { 'files': [file.filename] }
+                    else:
+                        files[file.ipfs]['files'].append(file.filename)
     return files
 
 def pinned_files(ipfs, mods):
@@ -38,10 +41,12 @@ def pinned_files(ipfs, mods):
     the node.
     """
     files = wanted_pins(mods)
-    pinned = set()
+    pinned = dict()
     for phash, _ in ipfs.pin_ls()['Keys'].items():
-        pinned.add(phash)
-    return pinned.intersection(files)
+        if phash not in files: continue
+        stat = ipfs.object_stat(phash)
+        pinned[phash] = { 'size': stat['CumulativeSize'], 'files': files[phash]['files'] }
+    return pinned
 
 def pin_files(ipfs, mods, callback=None):
     """

@@ -132,12 +132,25 @@ def ipfs_url(fname, fhash):
 def file_is_pinned(mhash):
     return mhash in app.pins
 
+def archive_size():
+    s = 0
+    for _, p in app.pins.items():
+        s += p['size']
+    return s
+
 # This adds utility functions to the template engine.
 @app.context_processor
 def utility_funcs():
     def meta_revision():
         return app.meta_rev
-
+    def size_fmt(sz):
+        """
+        Formats a file size (in bytes) in the smallest unit that can fit a whole number.
+        """
+        for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+            if abs(sz) < 1000.0: return "{:3.1f}{}B".format(sz, unit)
+            sz /= 1000.0
+        return "{:.1f}YB".format(sz)
     def url_type_name(ty):
         if ty == 'archived': return 'Archived File'
         elif ty == 'ipfs': return 'IPFS Download'
@@ -146,6 +159,8 @@ def utility_funcs():
         else: return ty
     return dict(
         url_type_name=url_type_name,
+        size_fmt=size_fmt,
+        archive_size=archive_size,
         meta_revision=meta_revision,
         time_since_update=time_since_update,
         ipfs_url=ipfs_url,
