@@ -49,11 +49,11 @@ while app.ipfs == None:
 app.repo = repomgmt.clone_temp(repo_url)
 app.meta_rev = app.repo.current_rev_str()
 
-def file_pinned(hash_):
+def file_pinned(hash_, info):
     """
     Callback executed when a file is pinned.
     """
-    app.pins.add(hash_)
+    app.pins[hash_] = info
 
 def pin_files_async():
     """

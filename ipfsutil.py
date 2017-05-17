@@ -35,6 +35,13 @@ def wanted_pins(mods):
                         files[file.ipfs]['files'].append(file.filename)
     return files
 
+def mk_pin_info(ipfs, phash, wanted):
+    stat = ipfs.object_stat(phash)
+    return {
+        'size': stat['CumulativeSize'],
+        'files': wanted[phash]['files'],
+    }
+
 def pinned_files(ipfs, mods):
     """
     Returns a set of all IPFS hashes in the given mods list which are pinned to
@@ -44,8 +51,7 @@ def pinned_files(ipfs, mods):
     pinned = dict()
     for phash, _ in ipfs.pin_ls()['Keys'].items():
         if phash not in files: continue
-        stat = ipfs.object_stat(phash)
-        pinned[phash] = { 'size': stat['CumulativeSize'], 'files': files[phash]['files'] }
+        pinned[phash] = mk_pin_info(ipfs, phash, files)
     return pinned
 
 def pin_files(ipfs, mods, callback=None):
@@ -53,6 +59,7 @@ def pin_files(ipfs, mods, callback=None):
     Pins all of the files in the given mod list to the IPFS node. This should
     cause the node to fetch the files and serve them for others to download.
     """
+    files = wanted_pins(mods)
     pinned = set()
     for phash, _ in ipfs.pin_ls()['Keys'].items():
         pinned.add(phash)
@@ -62,4 +69,4 @@ def pin_files(ipfs, mods, callback=None):
                 if file.ipfs != '' and file.ipfs not in pinned:
                     print('Pinning {} ({})'.format(file.ipfs, file.filename))
                     ipfs.pin_add(file.ipfs)
-                    if callback: callback(file.ipfs)
+                    if callback: callback(file.ipfs, mk_pin_info(ipfs, file.ipfs, files))
