@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}{{ mod.name }}{% endblock %}
+{% block title %}
+{{ mod.name }}
+{% endblock %}
 
 {% macro vsnblock(vsn) %}
 <div class="block">
@@ -46,6 +48,22 @@
 {% block body %}
 
 <h1>{{ mod.name }}</h1>
+
+{% if len(mod.authors) > 0 %}
+<p><i>
+Authored by
+{% for author in mod.authors %}
+    {% if author == mod.authors|first and len(mod.authors) <= 2 %}
+        {{ author }}
+    {% elif author == mod.authors|last %}
+        and {{ author }}
+    {% else %}
+        {{ author }}, 
+    {% endif %}
+{% endfor %}
+</i></p>
+{% endif %}
+
 <p>{{ mod.desc }}</p>
 
 {% for mcv, vsns in mod.vsns_by_mcvsn().items() %}
