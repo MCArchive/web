@@ -2,7 +2,7 @@ import os
 import os.path
 from collections import OrderedDict
 
-import json
+import yaml
 from jsonobject import *
 
 # FIXME: Don't hard-code this
@@ -123,7 +123,7 @@ class ModMeta(JsonObject):
 
 def load_mod_file(path):
     with open(path, 'r') as f:
-        return ModMeta(json.load(f))
+        return ModMeta(yaml.load(f))
 
 def load_mods(path):
     mods = {}
