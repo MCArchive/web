@@ -34,9 +34,14 @@
     <footer>
         <p>Archive Revision <span class="hash">{{ meta_revision() }}</span>
             (<a href="https://github.com/MCArchive/metarepo">metadata on GitHub</a>)
-            &mdash; last update check
+            &mdash;
+            {% if are_updates_enabled() %}
+            last update check
             {{ time_since_update().seconds // 60 }}m
             {{ time_since_update().seconds % 60 }}s ago
+            {% else %}
+            updates disabled for local repo
+            {% endif %}
         </p>
         <p>
             {% if 'VSN_GIT' in config %}

@@ -16,6 +16,10 @@ import ipfsutil
 from flask import Flask, render_template, abort, make_response, Response
 app = Flask(__name__)
 
+app.config.from_object("default_settings")
+if (os.environ.get('MCARCH_CONFIG')):
+    app.config.from_envvar("MCARCH_CONFIG")
+
 from flaskext.markdown import Markdown
 Markdown(app)
 
@@ -32,8 +36,6 @@ if os.path.isfile('DEPLOY_VSN'):
 
 app.config['ANALYTICS_ID'] = os.environ.get('MCA_ANALYTICS_ID')
 
-repo_url = 'https://github.com/MCArchive/metarepo.git'
-
 def ipfs_try_conn(*args, **kwargs):
     try:
         return ipfsapi.connect(*args, **kwargs)
@@ -49,8 +51,17 @@ while app.ipfs == None:
     print('Trying to connect')
     app.ipfs = ipfs_try_conn('ipfs')
 
-app.repo = repomgmt.clone_temp(repo_url)
-app.meta_rev = app.repo.current_rev_str()
+if app.config.get('METAREPO_URL'):
+    app.repo = repomgmt.clone_temp(app.config['METAREPO_URL'])
+    app.meta_rev = app.repo.current_rev_str()
+elif app.config.get('LOCAL_METAREPO_PATH'):
+    from repomgmt import MetaRepo
+    print('Running with local repository')
+    app.repo = None
+    app.meta_rev = MetaRepo(app.config.get('LOCAL_METAREPO_PATH')).current_rev_str()
+else:
+    print('Error: no metarepo specified. Set METAREPO_URL or LOCAL_METAREPO_PATH')
+    exit()
 
 def file_pinned(hash_, info):
     """
@@ -72,7 +83,10 @@ def pin_files_async():
     thr.start()
 
 def load_all_mods():
-    app.mods = load_mods(os.path.join(app.repo.path, 'mods'))
+    if app.repo:
+        app.mods = load_mods(os.path.join(app.repo.path, 'mods'))
+    else:
+        app.mods = load_mods(os.path.join(app.config['LOCAL_METAREPO_PATH'], 'mods'))
     print('Creating IPFS links')
     app.flinks = ipfsutil.mk_links(app.ipfs, app.mods)
     app.pins = ipfsutil.pinned_files(app.ipfs, app.mods)
@@ -119,12 +133,16 @@ def repo_update():
         logger.info('No updates found')
     app.update_time = datetime.now()
 
-schedule.every(3).minutes.do(repo_update)
+if app.repo:
+    schedule.every(3).minutes.do(repo_update)
 run_schedule()
 
 # Computes the timedelta since the last repo update.
 def time_since_update():
     return datetime.now() - app.update_time
+
+def are_updates_enabled():
+    return app.repo is not None
 
 def ipfs_url(fname, fhash):
     """
@@ -166,6 +184,7 @@ def utility_funcs():
         archive_size=archive_size,
         meta_revision=meta_revision,
         time_since_update=time_since_update,
+        are_updates_enabled=are_updates_enabled,
         ipfs_url=ipfs_url,
         is_pinned=file_is_pinned,
         len=len # This isn't available by default for some reason
