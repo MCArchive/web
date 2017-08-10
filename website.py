@@ -16,6 +16,9 @@ import ipfsutil
 from flask import Flask, render_template, abort, make_response, Response
 app = Flask(__name__)
 
+from flaskext.markdown import Markdown
+Markdown(app)
+
 # The deployment script writes information about the version to a file called
 # DEPLOY_VSN. If this file is not present, we just assume we're running in
 # development mode.

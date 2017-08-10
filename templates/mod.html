@@ -14,7 +14,9 @@
     </h3>
 
     {% if vsn.desc != "" %}
-    <p>{{ vsn.desc }}</p>
+    <div class="vsn-desc">
+        {{ vsn.desc | markdown }}
+    </div>
     {% endif %}
 
     {% for file in vsn.files %}
@@ -64,7 +66,11 @@ Authored by
 </i></p>
 {% endif %}
 
-<p>{{ mod.desc }}</p>
+{% if mod.desc %}
+<div class="mod-desc">
+    {{ mod.desc | markdown }}
+</div>
+{% endif %}
 
 {% for mcv, vsns in mod.vsns_by_mcvsn().items() %}
 
