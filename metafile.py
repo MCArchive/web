@@ -5,9 +5,6 @@ from collections import OrderedDict
 import yaml
 from jsonobject import *
 
-# FIXME: Don't hard-code this
-s3url = "https://files.mcarchive.net/"
-
 class ModHash(JsonObject):
     type_ = StringProperty(name='type')
     digest = StringProperty()
@@ -22,7 +19,6 @@ class ModVsnFile(JsonObject):
     Holds metadata about a file within a version.
     """
     filename = StringProperty(required=True)
-    archived = StringProperty(default='')
     hash_ = ObjectProperty(ModHash, name='hash', required=True)
     ipfs = StringProperty(default='')
     urls = ListProperty(ModUrl)
@@ -39,13 +35,6 @@ class ModVsnFile(JsonObject):
         """
         return self.archive_public()
 
-    def archive_url(self):
-        """
-        Determines the URL of the archived file from the given S3 URL and the
-        version's checksum.
-        """
-        return s3url + self.archived
-
     def ipfs_url(self):
         """
         Determines the URL of the archived file in IPFS (accessed via ipfs.io).
@@ -60,8 +49,6 @@ class ModVsnFile(JsonObject):
         lst = self.urls.copy()
         if self.ipfs != '' and self.archive_public():
             lst.append(ModUrl(type_="ipfs", url=self.ipfs_url()))
-        if self.archived != '' and self.archive_public():
-            lst.append(ModUrl(type_="archived", url=self.archive_url()))
         return lst
 
 class ModVersion(JsonObject):
