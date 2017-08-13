@@ -11,12 +11,15 @@ main, header, footer, .container {
 main {
     /* The navbar overlaps this top part of the document. */
     margin-top: 50px;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 10px 30px;
+    border-radius: 4px;
 }
 
 nav {
-    border-bottom: 1px solid #cacaca;
+    border: none;
     overflow: hidden;
-    background-color: #eee;
+    background: url('../img/top-bg.png');
     position: fixed;
     width: 100%;
     left: 0;
@@ -30,27 +33,26 @@ nav .container {
 }
 nav a {
     float: left;
-    color: #444;
+    color: white;
     text-decoration: none;
-    border: 0px solid #ccc;
-    border-left-width: 1px;
+    border: none;
     padding: 6px 6px;
     display: block;
     height: 24px;
     line-height: 24px;
     font-size: 12pt;
-    transition: background-color 0.2s, box-shadow 0.2s;
+    transition: color 0.2s, box-shadow 0.2s;
 }
 nav a:last-child {
     border-right-width: 1px;
 }
 nav a:hover {
-    background-color: #fff;
-    color: #444;
+    background: none;
+    color: #eee;
 }
 nav a:active, nav a.active {
-    background-color: #ddd;
-    color: #444;
+    background: none;
+    color: #eee;
     box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.28);
 }
 .logo {
@@ -60,6 +62,7 @@ nav a:active, nav a.active {
     margin-right: 20px;
     padding-left: 0px;
     transition: text-shadow 0.2s;
+    color: white;
 }
 .logo:hover {
     text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.28);
@@ -75,9 +78,9 @@ nav a:active, nav a.active {
     border-width: 1px;
     padding: 12px 20px;
     margin: 8px 0px;
-    border-color: #ccc;
-    background-color: #eee;
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.28);
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: none;
     border-radius: 2px;
 }
 /* Make p tags in blocks more compact */
@@ -94,7 +97,7 @@ nav a:active, nav a.active {
     border-style: solid;
     border-width: 0px;
     border-top-width: 1px;
-    border-color: #ccc;
+    border-color: #333;
     padding-top: 8px;
 }
 
@@ -116,16 +119,20 @@ nav a:active, nav a.active {
 }
 
 button, .btn {
-    background-color: #6b6;
-    padding: 4px 12px;
+    background: url('../img/idle.png') center center no-repeat;
+    width: auto;
+    height: auto;
+    text-align: center;
+    display: inline-block;
     color: white;
     text-decoration: none;
-    transition: background-color 0.2s, box-shadow 0.2s, color 0.2s;
-    border-style: none;
-    border-radius: 2px;
+    transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+    border: solid black 1px;
+    border-radius: 0px;
 }
 button:hover, .btn:hover {
-    background-color: #5a5;
+    background: url('/static/img/active.png') no-repeat center center fixed;
+    background-size: cover;
     color: white;
 }
 button:active, button.active, .btn:active {
@@ -142,18 +149,19 @@ button:focus {
 }
 
 a {
-    color: #4a4;
+    color: #eee;
     transition: color 0.3s;
 }
-a:hover { color: #7c7; }
-a:active { color: #282; }
+a:hover { color: #fff; }
+a:active { color: #fff; }
 
 input {
-    background-color: #fff;
+    background-color: #111;
     padding: 4px 8px;
     transition: box-shadow 0.2s;
-    border: 1px solid #ccc;
+    border: 1px solid #333;
     border-radius: 2px;
+    color: white;
 }
 input:focus {
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.28);
@@ -168,33 +176,34 @@ hr {
 }
 
 body {
-    color: #666;
+    background: url('../img/active.png');
+    color: white;
     font-size: 10pt;
     font-family: 'Roboto', sans-serif;
 }
 h1 {
     font-size: 18pt;
-    color: #444;
+    color: #eee;
     font-family: 'Roboto', sans-serif;
 }
 h2 {
     font-size: 16pt;
-    color: #444;
+    color: #eee;
     font-family: 'Roboto', sans-serif;
 }
 h3 {
     font-size: 14pt;
-    color: #444;
+    color: #eee;
     font-family: 'Roboto', sans-serif;
 }
 h4 {
     font-size: 10pt;
-    color: #444;
+    color: #eee;
     font-family: 'Roboto', sans-serif;
 }
 h4.file-name {
     font-size: 10pt;
-    color: #444;
+    color: #eee;
     font-family: 'Source Code Pro';
 }
 .hash {
@@ -263,4 +272,3 @@ ul.pin-lst li.pinned:before {
         width: 300px;
     }
 }
-
