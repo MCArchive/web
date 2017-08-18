@@ -131,7 +131,7 @@ button, .btn {
     border-radius: 0px;
 }
 button:hover, .btn:hover {
-    background: url('/static/img/active.png') no-repeat center center fixed;
+    background: url('../img/active.png') no-repeat center center fixed;
     background-size: cover;
     color: white;
 }
