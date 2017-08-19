@@ -33,7 +33,7 @@ nav .container {
 }
 nav a {
     float: left;
-    color: white;
+    color: #eee;
     background: none;
     text-decoration: none;
     border: none;
@@ -57,7 +57,7 @@ nav a:active, nav a.active {
     font-weight: bold;
     margin-right: 20px;
     padding-left: 0px;
-    color: white;
+    color: #eee;
 }
 .logo:hover, .logo:active {
     background-color: rgba(0, 0, 0, 0);
@@ -113,7 +113,7 @@ nav a:active, nav a.active {
 button, .btn {
     background-color: #666;
     padding: 4px 12px;
-    color: white;
+    color: #eee;
     text-decoration: none;
     transition: background-color 0.2s, box-shadow 0.2s, color 0.2s;
     border-style: none;
@@ -121,12 +121,12 @@ button, .btn {
 }
 button:hover, .btn:hover {
     background-color: #78b;
-    color: white;
+    color: #eee;
 }
 button:active, button.active, .btn:active {
     background-color: #67a;
     box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.28);
-    color: #eee;
+    color: #ddd;
 }
 .btn[disabled] {
     pointer-events: none;
@@ -149,7 +149,7 @@ input {
     transition: background-color 0.2s;
     border: 1px solid #333;
     border-radius: 2px;
-    color: white;
+    color: #aaa;
 }
 input:focus {
     background-color: #333;
@@ -165,30 +165,18 @@ hr {
 
 body {
     background: url('../img/bg.png');
-    color: white;
+    color: #aaa;
     font-size: 10pt;
     font-family: 'Roboto', sans-serif;
 }
-h1 {
-    font-size: 18pt;
-    color: #eee;
+h1, h2, h3, h4 {
+    color: #ccc;
     font-family: 'Roboto', sans-serif;
 }
-h2 {
-    font-size: 16pt;
-    color: #eee;
-    font-family: 'Roboto', sans-serif;
-}
-h3 {
-    font-size: 14pt;
-    color: #eee;
-    font-family: 'Roboto', sans-serif;
-}
-h4 {
-    font-size: 10pt;
-    color: #eee;
-    font-family: 'Roboto', sans-serif;
-}
+h1 { font-size: 18pt; }
+h2 { font-size: 16pt; }
+h3 { font-size: 14pt; }
+h4 { font-size: 10pt; }
 h4.file-name {
     font-size: 10pt;
     color: #eee;
