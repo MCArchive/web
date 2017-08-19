@@ -34,6 +34,7 @@ nav .container {
 nav a {
     float: left;
     color: white;
+    background: none;
     text-decoration: none;
     border: none;
     padding: 6px 6px;
@@ -41,18 +42,13 @@ nav a {
     height: 24px;
     line-height: 24px;
     font-size: 12pt;
-    transition: color 0.2s, box-shadow 0.2s;
-}
-nav a:last-child {
-    border-right-width: 1px;
+    transition: color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 nav a:hover {
-    background: none;
-    color: #eee;
+    background: rgba(0, 0, 0, 0);
 }
 nav a:active, nav a.active {
-    background: none;
-    color: #eee;
+    background: rgba(0, 0, 0, 0.4);
     box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.28);
 }
 .logo {
@@ -61,11 +57,7 @@ nav a:active, nav a.active {
     font-weight: bold;
     margin-right: 20px;
     padding-left: 0px;
-    transition: text-shadow 0.2s;
     color: white;
-}
-.logo:hover {
-    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.28);
 }
 .logo:hover, .logo:active {
     background-color: rgba(0, 0, 0, 0);
@@ -119,24 +111,20 @@ nav a:active, nav a.active {
 }
 
 button, .btn {
-    background: url('../img/idle.png') center center no-repeat;
-    width: auto;
-    height: auto;
-    text-align: center;
-    display: inline-block;
+    background-color: #666;
+    padding: 4px 12px;
     color: white;
     text-decoration: none;
-    transition: background 0.2s, box-shadow 0.2s, color 0.2s;
-    border: solid black 1px;
-    border-radius: 0px;
+    transition: background-color 0.2s, box-shadow 0.2s, color 0.2s;
+    border-style: none;
+    border-radius: 2px;
 }
 button:hover, .btn:hover {
-    background: url('../img/active.png') no-repeat center center fixed;
-    background-size: cover;
+    background-color: #78b;
     color: white;
 }
 button:active, button.active, .btn:active {
-    background-color: #494;
+    background-color: #67a;
     box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.28);
     color: #eee;
 }
@@ -150,21 +138,21 @@ button:focus {
 
 a {
     color: #eee;
-    transition: color 0.3s;
+    transition: color 0.2s;
 }
-a:hover { color: #fff; }
-a:active { color: #fff; }
+a:hover { color: #78b; }
+a:active { color: #67a; }
 
 input {
     background-color: #111;
     padding: 4px 8px;
-    transition: box-shadow 0.2s;
+    transition: background-color 0.2s;
     border: 1px solid #333;
     border-radius: 2px;
     color: white;
 }
 input:focus {
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.28);
+    background-color: #333;
     outline-style: none;
 }
 
@@ -172,11 +160,11 @@ hr {
     /* This removes the ugly inset border. It's 2017, that stuff is ugly now */
     border-style: solid;
     border-bottom-width: 0;
-    border-color: #CCC;
+    border-color: #555;
 }
 
 body {
-    background: url('../img/active.png');
+    background: url('../img/bg.png');
     color: white;
     font-size: 10pt;
     font-family: 'Roboto', sans-serif;
@@ -219,7 +207,7 @@ footer {
     margin: 8px auto;
     padding: 6px 2px;
     border-style: solid;
-    border-color: #CCC;
+    border-color: #555;
     border-width: 0px;
     border-top-width: 1px;
 }
