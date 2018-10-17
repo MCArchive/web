@@ -148,7 +148,7 @@ def ipfs_url(fname, fhash):
     """
     Gets the URL in IPFS of the file with the given name and hash.
     """
-    return "https://ipfs.io/ipfs/" + app.flinks[(fname, fhash)]
+    return "https://cloudflare-ipfs.com/ipfs/" + app.flinks[(fname, fhash)]
 
 def file_is_pinned(mhash):
     return mhash in app.pins
