@@ -1,5 +1,5 @@
-# Minecraft Mod Archive
+# Old Mod Archive
 
-This repository contains the Minecraft Archive website, as well as some Python
-scripts for managing the archive's S3 bucket.
+This repository is deprecated. The new archive is
+[here](https://github.com/MCArchive/MCArchive).
 
